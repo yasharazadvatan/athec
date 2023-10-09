@@ -32,3 +32,18 @@ You don't need to change any code! Just run them.
 # Acknowledgement 
 
 Special thanks to Yilang Peng for this great library.
+
+    @article{peng2021athec,
+      title={Athec: A Python Library for Computational Aesthetic Analysis of Visual Media in Social Science Research},
+      author={Peng, Yilang},
+      journal={Computational Communication Research},
+      year={Forthcoming}
+    }
+
+    @article{peng2018feast,
+      title={Feast for the Eyes: Effects of Food Perceptions and Computer Vision Features on Food Photo Popularity.},
+      author={Peng, Yilang and Jemmott III, John B},
+      journal={International Journal of Communication},
+      volume={12},
+      year={2018}
+    }
