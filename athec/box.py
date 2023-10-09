@@ -15,7 +15,7 @@ def find_box(bw, # get a box that bounds a certain percentage of all edge points
              m = 0.90, 
              k = 1): # interval for checking pixels
     h, w = bw.shape
-    table = np.zeros((h,w), dtype=np.int)  # create an empty table
+    table = np.zeros((h,w), dtype=int)  # create an empty table
 
     table[0,0] = bw[0,0] # create summed area table (note: in numpy, x and y are exchanged)
     for x in range(1,w):
