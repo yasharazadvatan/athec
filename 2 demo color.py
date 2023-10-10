@@ -1,6 +1,16 @@
 import os
 from athec import misc, color, colordict
 import glob
+import json
+
+parent_dir = "output"
+sub_folder = "color"
+
+if not os.path.isdir(parent_dir):
+    os.mkdir(parent_dir)
+
+if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
+    os.mkdir(os.path.join(parent_dir, sub_folder))
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
@@ -10,6 +20,10 @@ all_images = glob.glob(f"{img_folder}/*")
 
 for img in all_images:
     image_name = img.split(os.path.sep)[-1]
+    output_file = os.path.join(parent_dir, sub_folder, image_name.split('.')[0])
+    if not os.path.isdir(output_file):
+        os.mkdir(output_file)
+
     img_resized = os.path.join(resize_folder, image_name)
     """
     Calculate summary statistics of RGB channels.
@@ -17,37 +31,44 @@ for img in all_images:
     """
     result = color.attr_RGB(img_resized, return_full = True)
     misc.printd(result)
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_RGB.txt"), 'w') as f:
+        f.write(json.dumps(str(result)))
 
     """
     Calculate summary statistics of HSV channels.
     """
     result = color.attr_HSV(img_resized)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_HSV.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Calculate summary statistics of HSL channels.
     """
     result = color.attr_HSL(img_resized)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_HSL.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Calculate summary statistics of XYZ channels
     """
     result = color.attr_XYZ(img_resized)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_XYZ.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Calculate summary statistics of Lab channels
     """
     result = color.attr_Lab(img_resized)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_Lab.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Calculate summary statistics of grayscale channel
     """
     result = color.attr_grayscale(img_resized)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_grayscale.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Convert the image into a grayscale image.
     Return a 2-D array.
@@ -66,7 +87,8 @@ for img in all_images:
                                        save_path = os.path.join(tf_folder, "contrast range", image_name),
                                        threshold = 0.90)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_contrast_range.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Calculate contrast based on peak detection on the brightness histogram.
     Return the number of peaks, the largest gap between peaks, and all the detected peaks.
@@ -82,19 +104,22 @@ for img in all_images:
                                       argrelmax_order = 20)
 
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_contrast_peak.txt"), 'w') as f:
+        f.write(json.dumps(str(result)))
     """
     Calculate colorfulness based on the formula in Hasler and Suesstrunk (2003)
     """
     result = color.attr_colorful(img_resized)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_colorful.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Calculate colorfulness based on the distance between two color distributions (Datta et al., 2006)
     """
     result = color.attr_colorful_emd(img_resized)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_colorful_emd.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Get the color dictionary for attr_color_percentage.
     """
@@ -109,7 +134,8 @@ for img in all_images:
                                          color_dict = cd,
                                          save_path = os.path.join(tf_folder, "color percentage", image_name))
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_color_percentage.txt"), 'w') as f:
+        f.write(json.dumps(result))
     """
     Calculate color variety based on hue count formula in Ke et al. (2006).
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
@@ -126,3 +152,5 @@ for img in all_images:
                                   value_high = 0.95,
                                   hue_count_alpha = 0.05)
     misc.printd(result)
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_hue_count.txt"), 'w') as f:
+        f.write(json.dumps(result))

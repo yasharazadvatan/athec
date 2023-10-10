@@ -1,6 +1,16 @@
 import os
 from athec import misc, segment
 import glob
+import json
+
+parent_dir = "output"
+sub_folder = "segment"
+
+if not os.path.isdir(parent_dir):
+    os.mkdir(parent_dir)
+
+if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
+    os.mkdir(os.path.join(parent_dir, sub_folder))
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
@@ -10,6 +20,9 @@ all_images = glob.glob(f"{img_folder}/*")
 
 for img in all_images:
     image_name = img.split(os.path.sep)[-1]
+    output_file = os.path.join(parent_dir, sub_folder, image_name.split('.')[0])
+    if not os.path.isdir(output_file):
+        os.mkdir(output_file)
     img_resized = os.path.join(resize_folder, image_name)
 
     '''
@@ -38,14 +51,16 @@ for img in all_images:
                                              segment_thresholds = [0.05, 0.02, 0.01],
                                              top_areas = 5)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-1.txt"), 'w') as f:
+        f.write(json.dumps(result))
     '''
     This function can also take the file path of the segmentation image as the input.
     '''
     segment_path = os.path.join(tf_folder, "segment quickshift", image_name + '.png')
     result = segment.attr_complexity_segment(segment_path)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-2.txt"), 'w') as f:
+        f.write(json.dumps(result))
     '''
     Perform segmentation with normalized cut method.
     Return a 2-D array.
@@ -63,4 +78,5 @@ for img in all_images:
 
     result = segment.attr_complexity_segment(segment_nc)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-3.txt"), 'w') as f:
+        f.write(json.dumps(result))

@@ -1,6 +1,16 @@
 import os, sys
 from athec import misc, saliency
 import glob
+import json
+
+parent_dir = "output"
+sub_folder = "saliency"
+
+if not os.path.isdir(parent_dir):
+    os.mkdir(parent_dir)
+
+if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
+    os.mkdir(os.path.join(parent_dir, sub_folder))
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
@@ -10,6 +20,9 @@ all_images = glob.glob(f"{img_folder}/*")
 
 for img in all_images:
     image_name = img.split(os.path.sep)[-1]
+    output_file = os.path.join(parent_dir, sub_folder, image_name.split('.')[0])
+    if not os.path.isdir(output_file):
+        os.mkdir(output_file)
     img_resized = os.path.join(resize_folder, image_name)
 
     '''
@@ -58,7 +71,8 @@ for img in all_images:
                                                return_block = True)
 
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-1.txt"), 'w') as f:
+        f.write(json.dumps(str(result)))
     '''
     Calculate visual complexity based on the relative size of a minimal bounding box that contains a certain percentage of saliency values.
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
@@ -69,7 +83,8 @@ for img in all_images:
                                      min_perentage = 0.9,
                                      check_interval = 1)
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-2.txt"), 'w') as f:
+        f.write(json.dumps(result))
     '''
     Calculate visual complexity based on the consistency between two saliency maps. This method first divides each saliency map into n x n (i.e., nblock) blocks. This method defines the top image blocks (i.e., top_percent) with the highest saliency values as "salient blocks." The percentage of overlapping salient blocks between two saliency maps measures the consistency between them.
     nblock (default 5): int. See above.
@@ -80,7 +95,8 @@ for img in all_images:
                                                            nblock = 5)
 
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-3.txt"), 'w') as f:
+        f.write(json.dumps(result))
     '''
     Find the center of mass (CoM) of a grayscale image and calculate measures of visual balance and rule of thirds.
     Return:
@@ -93,7 +109,8 @@ for img in all_images:
     result = saliency.attr_ruleofthirds_centroid(saliency_spectral,
                                    save_path = os.path.join(tf_folder, "ruleofthirds centroid saliency spectral", image_name) )
     misc.printd(result)
-
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-4.txt"), 'w') as f:
+        f.write(json.dumps(result))
     '''
     Calculate measures of rule of thirds based on saliency values that fall within thirds bands and intersections.
     Return:
@@ -107,3 +124,5 @@ for img in all_images:
                                              save_path = os.path.join(tf_folder, "ruleofthirds band saliency spectral", image_name) )
 
     misc.printd(result)
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-5.txt"), 'w') as f:
+        f.write(json.dumps(result))

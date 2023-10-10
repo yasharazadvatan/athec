@@ -1,6 +1,16 @@
 import os
 from athec import misc
 import glob
+import json
+
+parent_dir = "output"
+sub_folder = "preprocess"
+
+if not os.path.isdir(parent_dir):
+    os.mkdir(parent_dir)
+
+if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
+    os.mkdir(os.path.join(parent_dir, sub_folder))
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
@@ -9,6 +19,9 @@ all_images = glob.glob(f"{img_folder}/*")
 
 for img in all_images:
     image_name = img.split(os.path.sep)[-1]
+    output_file = os.path.join(parent_dir, sub_folder, image_name.split('.')[0])
+    if not os.path.isdir(output_file):
+        os.mkdir(output_file)
 
     img_path = os.path.join(img_folder, image_name)
     resize_path = os.path.join(resize_folder, image_name)
@@ -17,6 +30,10 @@ for img in all_images:
     '''
     result = misc.attr_mode(img_path)
     misc.printd(result)
+
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-1.txt"), 'w') as f:
+        f.write(json.dumps(result))
+
     '''
     Resize an image while keeping its original aspect ratio.
     Return:
@@ -33,11 +50,17 @@ for img in all_images:
     result = misc.tf_resize(img_path, resize_path, max_side=300)
     misc.printd(result)
 
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-2.txt"), 'w') as f:
+        f.write(json.dumps(result))
+
     '''
     Calculate file size, width, height, aspect ratio, image size, image diagonal length, and file size scaled by image size.
     '''
     result = misc.attr_size(resize_path)
     misc.printd(result)
+
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-3.txt"), 'w') as f:
+        f.write(json.dumps(result))
 
 
 

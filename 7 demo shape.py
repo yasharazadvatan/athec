@@ -2,6 +2,16 @@ import os
 from athec import misc, edge, shape
 import numpy as np
 import glob
+import json
+
+parent_dir = "output"
+sub_folder = "shape"
+
+if not os.path.isdir(parent_dir):
+    os.mkdir(parent_dir)
+
+if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
+    os.mkdir(os.path.join(parent_dir, sub_folder))
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
@@ -11,6 +21,9 @@ all_images = glob.glob(f"{img_folder}/*")
 
 for img in all_images:
     image_name = img.split(os.path.sep)[-1]
+    output_file = os.path.join(parent_dir, sub_folder, image_name.split('.')[0])
+    if not os.path.isdir(output_file):
+        os.mkdir(output_file)
     img_resized = os.path.join(resize_folder, image_name)
 
     '''
@@ -48,3 +61,5 @@ for img in all_images:
                                   return_summary = True)
 
     misc.printd(result)
+    with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_line_hough_edge.txt"), 'w') as f:
+        f.write(json.dumps(result))
