@@ -14,7 +14,7 @@ if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
-tf_folder = os.path.join("image", "transform")
+tf_folder = os.path.join("image", "transform", "edge")
 
 all_images = glob.glob(f"{img_folder}/*")
 
@@ -34,10 +34,10 @@ for img in all_images:
     '''
 
     edges = edge.tf_edge_canny(img_resized,
-                               save_path = os.path.join(tf_folder, "edge canny", image_name),
-                               thresholds = None,
-                               otsu_ratio = 0.5,
-                               gaussian_blur_kernel = (5,5))
+                               save_path=os.path.join(tf_folder, "edge canny", image_name),
+                               thresholds=None,
+                               otsu_ratio=0.5,
+                               gaussian_blur_kernel=(5, 5))
 
     '''
     Calculate visual complexity based on the edge map.
@@ -46,14 +46,14 @@ for img in all_images:
     '''
 
     result = edge.attr_complexity_edge(edges,
-                                       n_random = 1000)
+                                       n_random=1000)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_complexity_edge.txt"), 'w') as f:
         f.write(json.dumps(result))
     '''
     This function can also take the file path of the edge image as the input.
     '''
-    edge_path = os.path.join(tf_folder, "edge canny", image_name + '.png')
+    edge_path = os.path.join(tf_folder, "edge canny", image_name)
     result = edge.attr_complexity_edge(edge_path)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_complexity_edge.txt"), 'w') as f:
@@ -68,9 +68,9 @@ for img in all_images:
     check_interval (optional, default 1): int. The interval the function will search by for the bounding box. Increasing this number can speed up calculations but results are less accurate.
     '''
     result = edge.attr_complexity_edge_box(edges,
-                                          save_path = os.path.join(tf_folder, "bounding box edge canny", image_name),
-                                          min_perentage = 0.9,
-                                          check_interval = 1)
+                                           save_path=os.path.join(tf_folder, "bounding box edge canny", image_name),
+                                           min_perentage=0.9,
+                                           check_interval=1)
 
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_complexity_edge_box.txt"), 'w') as f:

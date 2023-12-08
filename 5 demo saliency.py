@@ -14,7 +14,7 @@ if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
-tf_folder = os.path.join("image", "transform")
+tf_folder = os.path.join("image", "transform", "saliency")
 
 all_images = glob.glob(f"{img_folder}/*")
 
@@ -31,7 +31,8 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     '''
     saliency_spectral = saliency.tf_saliency_spectral_residual(img_resized,
-                                                               save_path = os.path.join(tf_folder, "saliency spectral", image_name))
+                                                               save_path=os.path.join(tf_folder, "saliency spectral",
+                                                                                      image_name))
 
     '''
     Perform saliency detection with fine grained method. See https://docs.opencv.org/3.4/d8/d65/group__saliency.html and https://www.pyimagesearch.com/2018/07/16/opencv-saliency-detection/ 
@@ -39,7 +40,7 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     '''
     saliency_fine = saliency.tf_saliency_fine_grained(img_resized,
-                                                      save_path = os.path.join(tf_folder, "saliency fine", image_name))
+                                                      save_path=os.path.join(tf_folder, "saliency fine", image_name))
 
     '''
     Binarize an grayscale image. See https://www.pyimagesearch.com/2021/04/28/opencv-thresholding-cv2-threshold/
@@ -48,12 +49,12 @@ for img in all_images:
     threshold (default None): int. The threshold for binarization. Pixels above the threshold will be set to 255 and pixels below it will be set to 0. If this argument is not provided, the function will use the Ostu method to automatically find the threshold.
     '''
     saliency_spectral_bin = misc.tf_binary(saliency_spectral,
-                                               save_path = os.path.join(tf_folder, "saliency spectral binary", image_name),
-                                               threshold = 60)
+                                           save_path=os.path.join(tf_folder, "saliency spectral binary", image_name),
+                                           threshold=60)
 
     saliency_fine_bin = misc.tf_binary(saliency_fine,
-                                           save_path = os.path.join(tf_folder, "saliency fine binary", image_name),
-                                           threshold = 60)
+                                       save_path=os.path.join(tf_folder, "saliency fine binary", image_name),
+                                       threshold=60)
 
     '''
     Calculate visual complexity based on saliency.
@@ -66,9 +67,9 @@ for img in all_images:
     return_block (default False): bool. If set to True, the function will return the saliency values in each block.
     '''
     result = saliency.attr_complexity_saliency(saliency_spectral,
-                                               threshold = 0.7,
-                                               nblock = 10,
-                                               return_block = True)
+                                               threshold=0.7,
+                                               nblock=10,
+                                               return_block=True)
 
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-1.txt"), 'w') as f:
@@ -79,9 +80,10 @@ for img in all_images:
     see demo edge.py
     '''
     result = saliency.attr_complexity_saliency_box(saliency_spectral,
-                                     save_path = os.path.join(tf_folder, "bounding box saliency spectral", image_name),
-                                     min_perentage = 0.9,
-                                     check_interval = 1)
+                                                   save_path=os.path.join(tf_folder, "bounding box saliency spectral",
+                                                                          image_name),
+                                                   min_perentage=0.9,
+                                                   check_interval=1)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-2.txt"), 'w') as f:
         f.write(json.dumps(result))
@@ -91,8 +93,8 @@ for img in all_images:
     top_percent (default 0.6): float. See above.
     '''
     result = saliency.attr_complexity_saliency_consistency(saliency_spectral, saliency_fine,
-                                                           top_percent = 0.6,
-                                                           nblock = 5)
+                                                           top_percent=0.6,
+                                                           nblock=5)
 
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-3.txt"), 'w') as f:
@@ -106,8 +108,11 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     '''
 
+    print(image_name)
     result = saliency.attr_ruleofthirds_centroid(saliency_spectral,
-                                   save_path = os.path.join(tf_folder, "ruleofthirds centroid saliency spectral", image_name) )
+                                                 save_path=os.path.join(tf_folder,
+                                                                        "ruleofthirds centroid saliency spectral",
+                                                                        image_name))
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-4.txt"), 'w') as f:
         f.write(json.dumps(result))
@@ -121,7 +126,8 @@ for img in all_images:
     '''
 
     result = saliency.attr_ruleofthirds_band(saliency_spectral,
-                                             save_path = os.path.join(tf_folder, "ruleofthirds band saliency spectral", image_name) )
+                                             save_path=os.path.join(tf_folder, "ruleofthirds band saliency spectral",
+                                                                    image_name))
 
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-5.txt"), 'w') as f:

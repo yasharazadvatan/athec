@@ -14,7 +14,7 @@ if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
-tf_folder = os.path.join("image", "transform")
+tf_folder = os.path.join("image", "transform", "color")
 
 all_images = glob.glob(f"{img_folder}/*")
 
@@ -29,7 +29,7 @@ for img in all_images:
     Calculate summary statistics of RGB channels.
     return_full (optional, default False): bool. If set to True, ten summary statistics will be returned. Otherwise only mean and standard deviation are returned.
     """
-    result = color.attr_RGB(img_resized, return_full = True)
+    result = color.attr_RGB(img_resized, return_full=True)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_RGB.txt"), 'w') as f:
         f.write(json.dumps(str(result)))
@@ -75,7 +75,7 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     """
     color.tf_grayscale(img_resized,
-                       save_path = os.path.join(tf_folder, "grayscale", image_name))
+                       save_path=os.path.join(tf_folder, "grayscale", image_name))
 
     """
     Calculate contrast based on a range that covers a certain percentage of the brightness histogram.
@@ -84,8 +84,8 @@ for img in all_images:
     threshold (optional, default 0.9): float. The percentage the range covers.
     """
     result = color.attr_contrast_range(img_resized,
-                                       save_path = os.path.join(tf_folder, "contrast range", image_name),
-                                       threshold = 0.90)
+                                       save_path=os.path.join(tf_folder, "contrast range", image_name),
+                                       threshold=0.90)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_contrast_range.txt"), 'w') as f:
         f.write(json.dumps(result))
@@ -97,11 +97,11 @@ for img in all_images:
     argrelmax_order (optional): the function uses scipy.signal.argrelmax to find peaks on the filtered histogram. This parameter corresponds to order in scipy.signal.argrelmax. See https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.argrelmax.html
     """
     result = color.attr_contrast_peak(img_resized,
-                                      save_path = os.path.join(tf_folder, "contrast peak", image_name),
-                                      savgol_filter_window_length = 51,
-                                      savgol_filter_polyorder = 5,
-                                      savgol_filter_mode = "constant",
-                                      argrelmax_order = 20)
+                                      save_path=os.path.join(tf_folder, "contrast peak", image_name),
+                                      savgol_filter_window_length=51,
+                                      savgol_filter_polyorder=5,
+                                      savgol_filter_mode="constant",
+                                      argrelmax_order=20)
 
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_contrast_peak.txt"), 'w') as f:
@@ -131,8 +131,8 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     """
     result = color.attr_color_percentage(img_resized,
-                                         color_dict = cd,
-                                         save_path = os.path.join(tf_folder, "color percentage", image_name))
+                                         color_dict=cd,
+                                         save_path=os.path.join(tf_folder, "color percentage", image_name))
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_color_percentage.txt"), 'w') as f:
         f.write(json.dumps(result))
@@ -146,11 +146,11 @@ for img in all_images:
     """
 
     result = color.attr_hue_count(img_resized,
-                                  save_path = os.path.join(tf_folder, "hue count", image_name),
-                                  saturation_low = 0.2,
-                                  value_low = 0.15,
-                                  value_high = 0.95,
-                                  hue_count_alpha = 0.05)
+                                  save_path=os.path.join(tf_folder, "hue count", image_name),
+                                  saturation_low=0.2,
+                                  value_low=0.15,
+                                  value_high=0.95,
+                                  hue_count_alpha=0.05)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_hue_count.txt"), 'w') as f:
         f.write(json.dumps(result))

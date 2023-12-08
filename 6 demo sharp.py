@@ -14,7 +14,7 @@ if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
-tf_folder = os.path.join("image", "transform")
+tf_folder = os.path.join("image", "transform", "sharp")
 
 all_images = glob.glob(f"{img_folder}/*")
 
@@ -30,7 +30,7 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     '''
     result = sharp.attr_sharp_laplacian(img_resized,
-                                        save_path = os.path.join(tf_folder, "sharp laplacian", image_name))
+                                        save_path=os.path.join(tf_folder, "sharp laplacian", image_name))
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_sharp_laplacian.txt"), 'w') as f:
         f.write(json.dumps(result))
@@ -39,7 +39,7 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     '''
     result = sharp.attr_sharp_fft(img_resized,
-                                  save_path = os.path.join(tf_folder, "sharp fft", image_name))
+                                  save_path=os.path.join(tf_folder, "sharp fft", image_name))
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_sharp_fft.txt"), 'w') as f:
         f.write(json.dumps(result))
@@ -48,7 +48,7 @@ for img in all_images:
     save_path (optional, default None): str. If provided, a visualization will be saved to this location.
     '''
     result = sharp.attr_sharp_mlv(img_resized,
-                                  save_path = os.path.join(tf_folder, "sharp mlv", image_name))
+                                  save_path=os.path.join(tf_folder, "sharp mlv", image_name))
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_sharp_mlv.txt"), 'w') as f:
         f.write(json.dumps(result))
@@ -63,9 +63,9 @@ for img in all_images:
     return_block (default False): bool. If set to True, the sharpness measures of all the blocks will be returned.
     '''
     result = sharp.attr_dof_block(img_resized,
-                                  sharp_method = sharp.attr_sharp_fft,
-                                  return_summary = True,
-                                  return_block = True)
+                                  sharp_method=sharp.attr_sharp_fft,
+                                  return_summary=True,
+                                  return_block=True)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_dof_block.txt"), 'w') as f:
         f.write(json.dumps(result))

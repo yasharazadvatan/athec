@@ -14,7 +14,7 @@ if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
-tf_folder = os.path.join("image", "transform")
+tf_folder = os.path.join("image", "transform", "segment")
 
 all_images = glob.glob(f"{img_folder}/*")
 
@@ -32,11 +32,11 @@ for img in all_images:
     ratio, kernel_siz, max_dist, sigma (optional): Parameters for quickshit segmentation. See https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.quickshift
     '''
     segment_qs = segment.tf_segment_quickshift(img_resized,
-                                               save_path = os.path.join(tf_folder, "segment quickshift", image_name),
-                                               ratio = 1,
-                                               kernel_siz = 5,
-                                               max_dist = 10,
-                                               sigma = 0)
+                                               save_path=os.path.join(tf_folder, "segment quickshift", image_name),
+                                               ratio=1,
+                                               kernel_siz=5,
+                                               max_dist=10,
+                                               sigma=0)
 
     '''
     Calculate visual complexity based on segmentation.
@@ -48,15 +48,15 @@ for img in all_images:
     top_areas (default 5): int. The number of the largest segments.
     '''
     result = segment.attr_complexity_segment(segment_qs,
-                                             segment_thresholds = [0.05, 0.02, 0.01],
-                                             top_areas = 5)
+                                             segment_thresholds=[0.05, 0.02, 0.01],
+                                             top_areas=5)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-1.txt"), 'w') as f:
         f.write(json.dumps(result))
     '''
     This function can also take the file path of the segmentation image as the input.
     '''
-    segment_path = os.path.join(tf_folder, "segment quickshift", image_name + '.png')
+    segment_path = os.path.join(tf_folder, "segment quickshift", image_name)
     result = segment.attr_complexity_segment(segment_path)
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-2.txt"), 'w') as f:
@@ -68,13 +68,14 @@ for img in all_images:
     km_n_segments, km_compactness, rag_sigma, nc_thresh, nc_num_cuts, nc_max_edge: parameters for normalized cut segmentation. See https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_ncut.html
     '''
     segment_nc = segment.tf_segment_normalized_cut(img_resized,
-                                                    save_path = os.path.join(tf_folder, "segment normalized cut", image_name),
-                                                    km_n_segments = 100,
-                                                    km_compactness = 30,
-                                                    rag_sigma = 100,
-                                                    nc_thresh = 0.001,
-                                                    nc_num_cuts = 10,
-                                                    nc_max_edge = 1.0)
+                                                   save_path=os.path.join(tf_folder, "segment normalized cut",
+                                                                          image_name),
+                                                   km_n_segments=100,
+                                                   km_compactness=30,
+                                                   rag_sigma=100,
+                                                   nc_thresh=0.001,
+                                                   nc_num_cuts=10,
+                                                   nc_max_edge=1.0)
 
     result = segment.attr_complexity_segment(segment_nc)
     misc.printd(result)

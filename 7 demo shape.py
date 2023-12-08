@@ -15,7 +15,7 @@ if not os.path.isdir(os.path.join(parent_dir, sub_folder)):
 
 img_folder = os.path.join("image", "original")
 resize_folder = os.path.join("image", "resize")
-tf_folder = os.path.join("image", "transform")
+tf_folder = os.path.join("image", "transform", "shape")
 
 all_images = glob.glob(f"{img_folder}/*")
 
@@ -30,8 +30,8 @@ for img in all_images:
     Perform Canny edge detection and results will be used in line detection.
     '''
     edges = edge.tf_edge_canny(img_resized,
-                               otsu_ratio = 0.5,
-                               gaussian_blur_kernel = (5,5))
+                               otsu_ratio=0.5,
+                               gaussian_blur_kernel=(5, 5))
 
     '''
     Calculate line dynamics based on edge map.
@@ -50,15 +50,15 @@ for img in all_images:
     https://docs.opencv.org/3.4/d9/db0/tutorial_hough_lines.html
     '''
     result = shape.attr_line_hough_edge(edges,
-                                  save_path = os.path.join(tf_folder, "line hough edge canny", image_name),
-                                  horizontal_degree = 10,
-                                  vertical_degree = 80,
-                                  HoughLinesP_rho = 1,
-                                  HoughLinesP_theta = np.pi/90,
-                                  HoughLinesP_threshold = 0,
-                                  HoughLinesP_minLineLength = 10,
-                                  HoughLinesP_maxLineGap = 2,
-                                  return_summary = True)
+                                        save_path=os.path.join(tf_folder, "line hough edge canny", image_name),
+                                        horizontal_degree=10,
+                                        vertical_degree=80,
+                                        HoughLinesP_rho=1,
+                                        HoughLinesP_theta=np.pi / 90,
+                                        HoughLinesP_threshold=0,
+                                        HoughLinesP_minLineLength=10,
+                                        HoughLinesP_maxLineGap=2,
+                                        return_summary=True)
 
     misc.printd(result)
     with open(os.path.join(output_file, image_name.split('.')[0] + "-attr_line_hough_edge.txt"), 'w') as f:
